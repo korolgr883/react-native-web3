@@ -10,14 +10,29 @@ const web3 = new Web3(
 );
 
 export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      latestBlock: {},
+    }
+  }
+
+  componentWillMount() {
+    web3.eth.getBlock('latest')
+      .then(latestBlock => {
+        console.log(latestBlock);
+        this.setState({ latestBlock });
+      });
+  }
+
   render() {
-    // printing on the console the latest ethereum block
-    web3.eth.getBlock('latest').then(console.log);
+    const latestBlockNumber = this.state.latestBlock.number;
 
     return (
       <View style={styles.container}>
+        <Text>Latest ethereum block is: {latestBlockNumber}</Text>
         <Text>Check your console!</Text>
-        <Text>You should find info on the latest ethereum block.</Text>
+        <Text>You should find extra info on the latest ethereum block.</Text>
       </View>
     );
   }
@@ -25,9 +40,10 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignItems: 'flex-start',
     backgroundColor: '#fff',
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    margin: 20,
   },
 });
